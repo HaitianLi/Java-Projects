@@ -1,0 +1,15 @@
+add collection books.csv
+add collection books2.csv
+list all
+list GENRES
+List Authors
+add member jack
+add member mage
+rent 100000 211111
+rent 100001 211121
+list available
+number copies
+relinquish 100000 211111
+relinquish 100001 211121
+common 100000 100001
+exit

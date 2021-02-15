@@ -1,0 +1,4 @@
+add collection books.csv
+save collection books_save.csv
+add collection books_save.csv
+exit

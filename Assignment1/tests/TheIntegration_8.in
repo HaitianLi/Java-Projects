@@ -1,0 +1,25 @@
+add collection books.csv
+add collectioN books2.csv
+add member 11
+add member jack hu
+add member mage
+common 100000 100000 100001 100002
+rent 100000 111111
+rent 100001 111112
+rent 100002 111113
+list available long
+list authors
+list all long
+member books 100000
+save collection books_save.csv
+add collection books_save.csv
+list all
+number copies
+list GENRES
+GeNres Fantasy
+Author Haitian Li
+Author ???
+member history 100000
+member 100001
+common 100000 100001 100002 100003
+exit

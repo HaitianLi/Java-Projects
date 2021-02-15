@@ -1,0 +1,4 @@
+add member 100000
+add collection books.csv
+member books 100001
+exit

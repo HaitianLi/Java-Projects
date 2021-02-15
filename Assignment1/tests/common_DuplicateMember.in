@@ -1,0 +1,6 @@
+add book books.csv 111111
+add member jack
+add member huhu
+add member nobody
+common 100000 100001 100001
+exit

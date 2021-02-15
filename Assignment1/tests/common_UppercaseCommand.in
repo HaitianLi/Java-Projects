@@ -1,0 +1,18 @@
+adD collection books.csv
+add member jack
+add member huhu
+add member nobody
+rent 100000 111111
+rent 100000 111112
+rent 100000 111113
+relinquish All 100000
+rent 100001 111111
+rent 100001 111112
+rent 100001 111113
+relinquish All 100001
+rent 100002 111111
+rent 100002 111112
+rent 100002 111113
+relinquish All 100002
+COMMon 100000 100001 100002
+exit

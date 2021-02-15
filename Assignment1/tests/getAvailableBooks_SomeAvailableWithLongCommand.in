@@ -1,0 +1,8 @@
+add collection books.csv
+add member jack
+add member ma
+rent 100000 111111
+rent 100000 111112
+rent 100001 111113
+list available long
+exit

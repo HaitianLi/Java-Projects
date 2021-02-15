@@ -1,0 +1,7 @@
+add collection books.csv
+add member jack hu
+rent 100000 111115
+rent 100000 111114
+RELINQUISH ALL 100000
+member history 100000
+exit

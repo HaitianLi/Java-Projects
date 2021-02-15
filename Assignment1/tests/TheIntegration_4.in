@@ -1,0 +1,22 @@
+add book books.csv 111111
+add collection books.csv
+ADD CollecTioN books2.csv
+list all
+add member jack hu
+add member Mr ma
+rent 100000 111111
+rent 100000 111112
+rent 100000 111113
+rent 100000 111114
+relinquish all 100000
+rent 100001 111111
+rent 100001 111112
+rent 100001 111113
+list available
+relinquish all 100001
+list available
+member history 100001
+common 100000 100001
+exit
+
+

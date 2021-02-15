@@ -1,0 +1,25 @@
+add collection books.csv
+add collection book2.csv
+add book books.csv 111111
+add member jackhu
+add member jackhu
+add member huhuhu
+add member mage
+member 100000
+member 100001
+member books 100000
+rent 100000 111111
+member books 100000
+member books 100001
+list GENRES
+list Authors
+Author Haitian li
+relinquish all 100000
+rent 100001 111111
+relinquish all 100001
+rent 100002 111111
+relinquish all 100002
+rent 100003 111111
+relinquish all 100003
+common 100000 100001 100002 100003
+exit

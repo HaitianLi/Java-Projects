@@ -1,0 +1,12 @@
+add collection books.csv
+add member jack hu
+add member jack ma
+rent 100000 111111
+rent 100000 111112
+rent 100000 111113
+rent 100000 111114
+rent 100001 111118
+rent 100001 111119
+MEMBER BOOks 100000
+MeMBER BOOks 100001
+exit

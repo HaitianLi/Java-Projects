@@ -1,0 +1,17 @@
+add collection books.csv
+add collection books2.csv
+number copies
+add member jack hu
+add member jack ma
+add member haitian
+rent 100000 111111
+rent 100001 111111
+relinquish 100000 111111
+rent 100001 111111
+rent 100001 111111
+add book books.csv 1asiljgf
+add collection books2.csv
+member books 100001
+relinquish 100001 111111
+common 100000 100001 100002
+exit

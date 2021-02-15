@@ -1,0 +1,8 @@
+add collection books.csv
+add member jack hu
+REnt 100000 111111
+reNt 100000 111111
+reNT 100000 111112
+rENt 100000 111113
+list available
+exit

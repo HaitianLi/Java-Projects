@@ -1,0 +1,12 @@
+ADD book books.csv 111111
+add member jack hu
+add member Mr ma
+geNre Poetry
+author J.K. Rowling
+list all
+author haitian lis
+genRe testcase
+BOOK 111112 
+add collection books.csv
+BOOK 111112 long
+exit

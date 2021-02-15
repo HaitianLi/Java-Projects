@@ -1,0 +1,4 @@
+add collection books.csv
+add member jack hu
+rent 100001 111111
+exit

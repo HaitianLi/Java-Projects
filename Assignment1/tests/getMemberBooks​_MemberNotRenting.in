@@ -1,0 +1,4 @@
+add collection books.csv
+add member jack ma
+member books 100000
+exit
