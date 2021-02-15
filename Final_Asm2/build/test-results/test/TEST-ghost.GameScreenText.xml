@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ghost.GameScreenText" tests="4" skipped="0" failures="0" errors="0" timestamp="2021-02-15T01:31:47" hostname="hali7329deMac-mini.local" time="4.388">
+  <properties/>
+  <testcase name="TestGameScreenWhenGameloss()" classname="ghost.GameScreenText" time="1.091"/>
+  <testcase name="TestWhenAllGhostKilledByWaka()" classname="ghost.GameScreenText" time="1.073"/>
+  <testcase name="WakaReSetTest()" classname="ghost.GameScreenText" time="1.113"/>
+  <testcase name="TestGameScreenWhenPlayerWin()" classname="ghost.GameScreenText" time="1.083"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

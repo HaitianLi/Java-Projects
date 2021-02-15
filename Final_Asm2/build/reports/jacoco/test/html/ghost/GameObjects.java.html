@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GameObjects.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Final_Asm2</a> &gt; <a href="index.source.html" class="el_package">ghost</a> &gt; <span class="el_source">GameObjects.java</span></div><h1>GameObjects.java</h1><pre class="source lang-java linenums">package ghost;
+
+import processing.core.PApplet;
+import processing.core.PImage;
+
+public abstract class GameObjects implements GameInterface{
+    private int x;
+    private int y;
+    private PImage sprite;
+<span class="fc" id="L10">    private boolean alive = true;</span>
+
+    /**
+     * 
+     * @param x coordinate x.
+     * @param y coordinate y.
+     * @param sprite Image.
+     */
+<span class="fc" id="L18">    public GameObjects(int x, int y, PImage sprite) {</span>
+<span class="fc" id="L19">        this.x = x;</span>
+<span class="fc" id="L20">        this.y = y;</span>
+<span class="fc" id="L21">        this.sprite = sprite;</span>
+<span class="fc" id="L22">    }</span>
+
+    /**
+     * Return the coordinate x.
+     * @return Return the coorinate x.
+     */
+    public int getX() {
+<span class="fc" id="L29">        return this.x;</span>
+    }
+
+    /**
+     * Return the coordinate y.
+     * @return Return the coordinate y.
+     */
+    public int getY() {
+<span class="fc" id="L37">        return this.y;</span>
+    }
+
+    /**
+     * Check whether the object alive.
+     * @return Return true if alive.
+     */
+    public boolean getAlive() {
+<span class="fc" id="L45">        return this.alive;</span>
+    }
+
+    /**
+     * Retrun the current sprite.
+     * @return Return the current using sprite.
+     */
+    public PImage getSprite() {
+<span class="fc" id="L53">        return this.sprite;</span>
+    }
+
+    /**
+     * Set the coodinate x.
+     * &lt;br&gt;Because speed always less than 3, and the map top 3 rows and bottom 2 rows never use.&lt;br&gt;
+     * So when i greater 2 means it is a set up coordinate method.&lt;br&gt;
+     * if i less and equal than 2, means it is a speed set up method.&lt;br&gt;
+     * @param i speed or x coordinate.
+     */
+    public void setX(int i) {
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (i &gt; 2) {</span>
+<span class="fc" id="L65">            this.x = i;</span>
+        } else {
+<span class="fc" id="L67">            this.x += i;</span>
+        }
+<span class="fc" id="L69">    }</span>
+
+    /**
+     * Set the coodinate y.
+     * &lt;br&gt;Because speed always less than 3, and the map top 3 rows and bottom 2 rows never use.&lt;br&gt;
+     * So when i greater 2 means it is a set up coordinate method.&lt;br&gt;
+     * if i less and equalt to 2, means it is a speed set up method.
+     * @param i speed or y coordinate.
+     */
+    public void setY(int i) {
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        if (i &gt; 2) {</span>
+<span class="fc" id="L80">            this.y = i;</span>
+        } else {
+<span class="fc" id="L82">            this.y += i;</span>
+        }
+<span class="fc" id="L84">    }</span>
+
+    /**
+     * Set the sprite with the parameter image.
+     * @param img The image want to set.
+     */
+    public void setSprit(PImage img) {
+<span class="fc" id="L91">        this.sprite = img;</span>
+<span class="fc" id="L92">    }</span>
+    /**
+     * Set the alive with parameter b boolean value.
+     * @param b Boolean value, true means object alive.
+     */
+    public void setAlive(boolean b) {
+<span class="fc" id="L98">        this.alive = b;</span>
+<span class="fc" id="L99">    }</span>
+    
+    /**
+     * Interface inplements, draw method draw objects on screen.
+     */
+    public void draw(PApplet app) {
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        if (getAlive()) {</span>
+<span class="fc" id="L106">            app.image(this.sprite, this.x, this.y);</span>
+        }
+<span class="fc" id="L108">    }</span>
+
+    /**
+     * Interface inplements, the method is empty ready to be override by son classes.
+     */
+    public  void tick() {
+        //ready for son classes to override.
+<span class="fc" id="L115">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

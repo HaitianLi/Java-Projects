@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ghost.WakaTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2021-02-15T01:32:46" hostname="hali7329deMac-mini.local" time="12.889">
+  <properties/>
+  <testcase name="WakaSodaTimeTest()" classname="ghost.WakaTest" time="1.22"/>
+  <testcase name="WakaMoveDownTest()" classname="ghost.WakaTest" time="1.243"/>
+  <testcase name="WakaMoveableTest()" classname="ghost.WakaTest" time="1.213"/>
+  <testcase name="WakaMoveLeftTest()" classname="ghost.WakaTest" time="1.277"/>
+  <testcase name="WakaFrightenTimeTest()" classname="ghost.WakaTest" time="1.279"/>
+  <testcase name="WakalivesTest()" classname="ghost.WakaTest" time="1.316"/>
+  <testcase name="WakaCheckMoveableTest()" classname="ghost.WakaTest" time="1.269"/>
+  <testcase name="WakaMoveableTest2()" classname="ghost.WakaTest" time="1.31"/>
+  <testcase name="WakaMoveRightTest()" classname="ghost.WakaTest" time="1.361"/>
+  <testcase name="WakaMoveTest()" classname="ghost.WakaTest" time="1.36"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,12 @@
+ghost/BuildTest.java
+ ghost.BuildTest
+ghost/GameScreenText.java
+ ghost.GameScreenText
+ghost/FruitText.java
+ ghost.FruitText
+ghost/WakaTest.java
+ ghost.WakaTest
+ghost/AppTest.java
+ ghost.AppTest
+ghost/GhostTest.java
+ ghost.GhostTest

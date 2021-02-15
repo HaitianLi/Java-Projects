@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SuperSoda.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Final_Asm2</a> &gt; <a href="index.source.html" class="el_package">ghost</a> &gt; <span class="el_source">SuperSoda.java</span></div><h1>SuperSoda.java</h1><pre class="source lang-java linenums">package ghost;
+import processing.core.PImage;
+import processing.core.PApplet;
+
+public class SuperSoda extends SuperFruit {
+    private Waka waka;
+
+    /**
+     * Super Soda constructor inherit from super class fruit.
+     * @param x coordinate x
+     * @param y coordinate y
+     * @param sprite Super soda image.
+     * @param reachable whether its reachable.
+     * @param waka The waka instance
+     */
+    public SuperSoda(int x, int y, PImage sprite, boolean reachable, Waka waka) {
+<span class="fc" id="L17">        super(x, y, sprite, reachable, waka);</span>
+<span class="fc" id="L18">        this.waka = waka;</span>
+<span class="fc" id="L19">    }</span>
+
+    /**
+     * Main logic for Super soda, if waka touched, the ghost get in Sodamode.
+     */
+    public void tick() {
+<span class="fc bfc" id="L25" title="All 2 branches covered.">        if (getAlive()) {</span>
+<span class="fc bfc" id="L26" title="All 4 branches covered.">            if (getWakaX() == this.getX() &amp;&amp; getWakaY() == this.getY()) {</span>
+<span class="fc" id="L27">                waka.setSodaMode(true);</span>
+<span class="fc" id="L28">                setAlive(false);</span>
+            }
+        }
+<span class="fc" id="L31">    }</span>
+
+    public void draw(PApplet app) {
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        if (getAlive()) {</span>
+<span class="fc" id="L35">            app.image(this.getSprite(), this.getX(), this.getY());</span>
+        }
+<span class="fc" id="L37">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Whim.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Final_Asm2</a> &gt; <a href="index.source.html" class="el_package">ghost</a> &gt; <span class="el_source">Whim.java</span></div><h1>Whim.java</h1><pre class="source lang-java linenums">package ghost;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import processing.core.PImage;
+
+public class Whim extends Ghost{
+    private Chaser chaser;
+    /**
+     * Whim constructor inherit from ghost.
+     * &lt;br&gt;Creat Whim instance with necessary variables.&lt;br&gt;
+     * @param x coordinate x.
+     * @param y coordinate y.
+     * @param sprite Ghost image.
+     * @param MapObjects A list conatin all mapObjects(),the objects could not move in the game.
+     * @param waka The waka
+     * @param Intersections A list of intersections node where ghosts could make a ture.
+     * @param ModeTime The different mode time read from json file.
+     * @param GameOriData The game original Data read from json(i.e. speed).
+     * @param ImgMap All images need to be used in this gmae.
+     * @param chaser The chaset instance, whim target depend on chaser.
+     */
+    public Whim(int x, int y, PImage sprite, ArrayList&lt;MapObjects&gt; MapObjects, Waka waka, ArrayList&lt;MapObjects&gt; Intersections,ArrayList&lt;Long&gt; ModeTime,HashMap&lt;String,Integer&gt; GameOriData , HashMap&lt;String,PImage&gt; ImgMap, Chaser chaser) {
+        //super(x, y, sprite, MapObjects, waka, Intersections, ModeTime, SodaGhost, GameOriData);
+<span class="fc" id="L26">        super(x, y, sprite, MapObjects, waka, Intersections, ModeTime, GameOriData, ImgMap);</span>
+<span class="fc" id="L27">        this.chaser = chaser;</span>
+<span class="fc" id="L28">    }</span>
+
+    /**
+     * Double the vector from Chaser to 2 grid spaces ahead of Waka.
+     */
+    public void checkLocation() {
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        for(MapObjects m: getMapObjects()) {</span>
+<span class="fc bfc" id="L35" title="All 4 branches covered.">            if (this.getX() == m.getX() &amp;&amp; this.getY() == m.getY()){</span>
+                
+<span class="fc" id="L37">                setTouchnode(true);</span>
+<span class="fc" id="L38">                this.setPriviousLocation(m.getX(), m.getY());</span>
+
+<span class="fc bfc" id="L40" title="All 2 branches covered.">                if (!getFrightenedMode()) {</span>
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">                    if (chaser.getAlive()) {</span>
+
+<span class="fc bfc" id="L43" title="All 2 branches covered.">                        if (getScaterMode()) {</span>
+<span class="fc" id="L44">                            setTarget(448, 576);</span>
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">                        } else if (getChaseMode()) {</span>
+                
+<span class="fc" id="L47">                            int WakaPlusTwoX = getWaka().getX() + (getWaka().getDx()*(16*2));</span>
+<span class="fc" id="L48">                            int WakaPlusTwoY = getWaka().getY() + (getWaka().getDy()*(16*2));</span>
+<span class="fc" id="L49">                            int ChaserX = chaser.getX();</span>
+<span class="fc" id="L50">                            int ChaserY = chaser.getY();</span>
+<span class="fc" id="L51">                            int numberX = 0;</span>
+<span class="fc" id="L52">                            int numberY = 0;</span>
+    
+<span class="fc bfc" id="L54" title="All 2 branches covered.">                            if (WakaPlusTwoX &gt; ChaserX) {</span>
+<span class="fc" id="L55">                                numberX = WakaPlusTwoX + (WakaPlusTwoX - ChaserX);</span>
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">                            } else if (WakaPlusTwoX &lt; ChaserX) {</span>
+                                
+<span class="fc" id="L58">                                numberX = WakaPlusTwoX - (ChaserX - WakaPlusTwoX);</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">                            } else if (WakaPlusTwoX == ChaserX) {</span>
+<span class="nc" id="L60">                                numberX = WakaPlusTwoX;</span>
+                            }
+    
+<span class="fc bfc" id="L63" title="All 2 branches covered.">                            if (WakaPlusTwoY &gt; ChaserY) {</span>
+<span class="fc" id="L64">                                numberY = WakaPlusTwoY + (WakaPlusTwoY - ChaserY);</span>
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">                            } else if (WakaPlusTwoY &lt; ChaserY) {</span>
+                                
+<span class="fc" id="L67">                                numberY = WakaPlusTwoY - (ChaserY - WakaPlusTwoY);</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">                            } else if (WakaPlusTwoY == ChaserY) {</span>
+<span class="nc" id="L69">                                numberY = WakaPlusTwoY;</span>
+                            }
+                            
+<span class="fc" id="L72">                            setTarget(numberX, numberY);</span>
+<span class="fc" id="L73">                        }</span>
+                    } else {
+<span class="nc" id="L75">                        setTarget(448, 576);</span>
+                    }
+                }
+                break;
+                
+            }
+<span class="fc" id="L81">        }</span>
+<span class="fc" id="L82">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

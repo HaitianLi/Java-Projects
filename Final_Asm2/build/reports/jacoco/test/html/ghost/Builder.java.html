@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Builder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Final_Asm2</a> &gt; <a href="index.source.html" class="el_package">ghost</a> &gt; <span class="el_source">Builder.java</span></div><h1>Builder.java</h1><pre class="source lang-java linenums">package ghost;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.Scanner;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import processing.core.PImage;
+import processing.core.PApplet;
+import processing.core.PFont;
+import org.json.simple.JSONArray;
+
+
+
+public class Builder {
+ 
+    private int WIDTH;
+    private int HEIGHT;
+    private int keyCode;
+    private String MapFileName;
+    private Waka waka;
+    private Chaser chaser;
+    private PFont Press2;
+<span class="fc" id="L27">    private boolean Setuped = false;</span>
+
+    private ArrayList&lt;GameInterface&gt; GameInterface;
+    private ArrayList&lt;String&gt; MapString;
+    private ArrayList&lt;MapObjects&gt; MapObjects;
+    private ArrayList&lt;MapObjects&gt; Intersections;
+    private ArrayList&lt;Fruit&gt; FruitsList;
+    private ArrayList&lt;Ghost&gt; GhostList;
+<span class="fc" id="L35">    private ArrayList&lt;Long&gt; ModeTime = new ArrayList&lt;Long&gt;();</span>
+
+    private HashMap&lt;String, PImage&gt; ImgMap;
+    private HashMap&lt;String,Integer&gt; GameOriData;
+
+
+    
+    /**
+     * Builder constructor, get WIDTH and HEIGHT from app.
+     * &lt;br&gt;Initialize all the variable needed later &lt;br&gt;
+     * @param WIDTH WIDTH length pass from app, window width
+     * @param HEIGHT HEIGHT length pass from app, window height 
+     */
+<span class="fc" id="L48">    public Builder(int WIDTH, int HEIGHT) {</span>
+<span class="fc" id="L49">        this.WIDTH = WIDTH;</span>
+<span class="fc" id="L50">        this.HEIGHT = HEIGHT;</span>
+<span class="fc" id="L51">        GameInterface = new ArrayList&lt;GameInterface&gt;();</span>
+<span class="fc" id="L52">        MapString = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L53">        MapObjects = new ArrayList&lt;MapObjects&gt;();</span>
+<span class="fc" id="L54">        Intersections = new ArrayList&lt;MapObjects&gt;();</span>
+<span class="fc" id="L55">        GhostList = new ArrayList&lt;Ghost&gt;();</span>
+<span class="fc" id="L56">        FruitsList = new ArrayList&lt;Fruit&gt;();</span>
+<span class="fc" id="L57">        ImgMap = new HashMap&lt;String,PImage&gt;();</span>
+<span class="fc" id="L58">        GameOriData = new  HashMap&lt;String,Integer&gt;();</span>
+<span class="fc" id="L59">    }</span>
+
+    /**
+     * Load all image which will use in the game to the the HashMap ImgMap.
+     * @param app Game window object app.
+     */
+    public void LoadMaterials(App app) {
+<span class="fc" id="L66">        ImgMap.put(&quot;FruitImg&quot;, app.loadImage(&quot;src/main/resources/fruit.png&quot;));</span>
+<span class="fc" id="L67">        ImgMap.put(&quot;MapHorizontalImg&quot;, app.loadImage(&quot;src/main/resources/horizontal.png&quot;));</span>
+<span class="fc" id="L68">        ImgMap.put(&quot;MapVerticalImg&quot;, app.loadImage(&quot;src/main/resources/vertical.png&quot;));</span>
+<span class="fc" id="L69">        ImgMap.put(&quot;MapUpLeftImg&quot;, app.loadImage(&quot;src/main/resources/upLeft.png&quot;));</span>
+<span class="fc" id="L70">        ImgMap.put(&quot;MapUpRightImg&quot;, app.loadImage(&quot;src/main/resources/upRight.png&quot;));</span>
+<span class="fc" id="L71">        ImgMap.put(&quot;MapDownLeftImg&quot;, app.loadImage(&quot;src/main/resources/downLeft.png&quot;));</span>
+<span class="fc" id="L72">        ImgMap.put(&quot;MapDownRightImg&quot;, app.loadImage(&quot;src/main/resources/downRight.png&quot;));</span>
+<span class="fc" id="L73">        ImgMap.put(&quot;wakaClose&quot;, app.loadImage(&quot;src/main/resources/playerClosed.png&quot;));</span>
+<span class="fc" id="L74">        ImgMap.put(&quot;wakaLeft&quot;, app.loadImage(&quot;src/main/resources/playerLeft.png&quot;));</span>
+<span class="fc" id="L75">        ImgMap.put(&quot;wakaRight&quot;, app.loadImage(&quot;src/main/resources/playerRight.png&quot;));</span>
+<span class="fc" id="L76">        ImgMap.put(&quot;wakaUp&quot;, app.loadImage(&quot;src/main/resources/playerUp.png&quot;));</span>
+<span class="fc" id="L77">        ImgMap.put(&quot;wakaDown&quot;, app.loadImage(&quot;src/main/resources/playerDown.png&quot;));</span>
+<span class="fc" id="L78">        ImgMap.put(&quot;GhostAmbusherImg&quot;, app.loadImage(&quot;src/main/resources/ambusher.png&quot;));</span>
+<span class="fc" id="L79">        ImgMap.put(&quot;GhostChaserImg&quot;, app.loadImage(&quot;src/main/resources/chaser.png&quot;));</span>
+<span class="fc" id="L80">        ImgMap.put(&quot;GhostIgnorantImg&quot;, app.loadImage(&quot;src/main/resources/ignorant.png&quot;));</span>
+<span class="fc" id="L81">        ImgMap.put(&quot;GhostWhimImg&quot;, app.loadImage(&quot;src/main/resources/whim.png&quot;));</span>
+<span class="fc" id="L82">        ImgMap.put(&quot;GhostFrightImg&quot;, app.loadImage(&quot;src/main/resources/frightened.png&quot;));</span>
+<span class="fc" id="L83">        ImgMap.put(&quot;GhostGhostImg&quot;, app.loadImage(&quot;src/main/resources/sodaGhost.png&quot;));</span>
+<span class="fc" id="L84">        ImgMap.put(&quot;Soda&quot;, app.loadImage(&quot;src/main/resources/soda.png&quot;));</span>
+<span class="fc" id="L85">        Press2 = app.createFont(&quot;src/main/resources/PressStart2P-Regular.ttf&quot;, 16);</span>
+<span class="fc" id="L86">    }</span>
+
+    /**
+     * Return the Image hashmap.
+     * &lt;br&gt;To check if any img not loaded&lt;br&gt;
+     * @return Image hashmap
+     */
+    public HashMap&lt;String, PImage&gt; getImgMap() {
+<span class="fc" id="L94">        return ImgMap;</span>
+    }
+
+    /**
+     * Build the GameScreen instance which controled what shows on screen.
+     * &lt;br&gt;The class inplements Gameinterface.&lt;br&gt;
+     * Add it to the GameInterface list.&lt;br&gt;
+     */
+    public void buildGameScreen() {
+<span class="fc" id="L103">        GameInterface Screen = new GameScreen(this, waka, Press2, GameInterface);</span>
+<span class="fc" id="L104">        GameInterface.add(Screen);</span>
+<span class="fc" id="L105">    }</span>
+    
+
+    /**
+     * Builder's setup function, setup everythng before draw.
+     * &lt;br&gt;Read the document first with readJson emthod.&lt;br&gt;
+     * Than read the map file which read from json.&lt;br&gt;
+     * Use the map file to initialize all objects(MapObjects, fruit, superfruit, soda,waka, ghosts).&lt;br&gt;
+     * If also creat a Mapobjects list and intersection point list.&lt;br&gt;
+     * Add the waka and Ghost after the Mapobject already in the GameInterface list.
+     * Build the gameScreen instance.
+     * The order is build waka then build MapObjects then build Intersection then build ghost then build others.
+     * Each step depends on the privious step.
+     */
+    public void setUp() {
+<span class="fc" id="L120">        readJson();</span>
+<span class="fc" id="L121">        readMap();</span>
+<span class="fc" id="L122">        this.buildWaka();</span>
+<span class="fc" id="L123">        this.setMapObjects();</span>
+<span class="fc" id="L124">        this.setIntersections();</span>
+<span class="fc" id="L125">        this.setGhostList();</span>
+<span class="fc" id="L126">        GameInterface.add(waka);</span>
+<span class="fc" id="L127">        this.buildGameScreen();</span>
+<span class="fc" id="L128">    }</span>
+
+    /**
+     * This is the mean output method. Use the interface which every object have in ths project except build and app.&lt;br&gt;
+     * &lt;br&gt;Draw all game objects on the screen.&lt;br&gt;
+     * Update the objects status by the frameRate(60)&lt;br&gt;
+     * @param app The game Windows instance.
+     */
+    public void runGameInterface(PApplet app) {
+<span class="fc bfc" id="L137" title="All 2 branches covered.">        if (!Setuped) {</span>
+<span class="fc" id="L138">            setUp();</span>
+<span class="fc" id="L139">            Setuped = true;</span>
+        }
+<span class="fc bfc" id="L141" title="All 2 branches covered.">        for (GameInterface obj : GameInterface) {</span>
+<span class="fc" id="L142">            obj.tick();</span>
+<span class="fc" id="L143">            obj.draw(app);</span>
+<span class="fc" id="L144">        }</span>
+<span class="fc" id="L145">    }</span>
+
+
+    /**
+     * Reset the game, clear all objects in the list than call builder setUp to resetup everything.
+     * &lt;br&gt;chaser is not in the list since the create of whim depends on the chaser exist.&lt;br&gt;
+     */
+    public void reSetGame() {
+        //MapString.clear();
+<span class="fc" id="L154">        MapObjects.clear();</span>
+<span class="fc" id="L155">        Intersections.clear();</span>
+<span class="fc" id="L156">        GameInterface.clear();</span>
+<span class="fc" id="L157">        GhostList.clear();</span>
+<span class="fc" id="L158">        FruitsList.clear();</span>
+<span class="fc" id="L159">        chaser = null;</span>
+        //setup will creat a new waka as will.
+<span class="fc" id="L161">    }</span>
+
+    /**
+     * Return waka instance.
+     * @return the Waka instance
+     */
+    public Waka getWaka() {
+<span class="fc" id="L168">        return waka;</span>
+    }
+
+
+    /**
+     * Get keycode from app, process the value, than pass to waka.
+     * &lt;br&gt;(-1, 0, left), (1, 0, right),(0, -1, up) , (0, 1, down).&lt;br&gt;
+     * Pass the value to the Ghost, to check if need use Debug Mode.&lt;br&gt;
+     * @param keycode   keyCode from app, the value when user press keyboard(up,down,left,right).
+     * @param keyvalue  keyValue from app, the value not up,down,left,right
+     */
+    public void getKeyValue(int keycode, int keyvalue) {
+<span class="fc" id="L180">        this.keyCode = keycode;</span>
+        //System.out.println(keycode);
+<span class="fc bfc" id="L182" title="All 2 branches covered.">        if (keyCode == 37) {</span>
+<span class="fc" id="L183">            waka.sendDirect(-1, 0);</span>
+<span class="fc bfc" id="L184" title="All 2 branches covered.">        } else if (keyCode == 39) {</span>
+<span class="fc" id="L185">            waka.sendDirect(1, 0);</span>
+<span class="fc bfc" id="L186" title="All 2 branches covered.">        } else if (keyCode == 38) {</span>
+<span class="fc" id="L187">            waka.sendDirect(0, -1);</span>
+<span class="fc bfc" id="L188" title="All 2 branches covered.">        } else if (keyCode == 40) {</span>
+<span class="fc" id="L189">            waka.sendDirect(0, 1);</span>
+        }
+<span class="fc" id="L191">        Ghost.sendKeyvalue(keyvalue);</span>
+<span class="fc" id="L192">    }</span>
+
+    /**
+     * Set up the Ghost instance for the game.
+     * &lt;br&gt;Build different kind Ghost read from map file with their necessary variables at the original coordinate.&lt;br&gt;
+     * Special logic for whim, the whim only created when chaser exist.&lt;br&gt;
+     * This method should run after Mapobject and intersation already built.&lt;br&gt;
+     * Add all ghosts to the Gameinterface list.&lt;br&gt;
+     */
+    public void setGhostList() {
+<span class="fc" id="L202">        boolean CreatWhim = false;</span>
+<span class="fc" id="L203">        int whimX = 0;</span>
+<span class="fc" id="L204">        int whimY = 0;</span>
+        //could replace by a function which return (x,y)
+<span class="fc bfc" id="L206" title="All 2 branches covered.">        for (int i = 0; i &lt; this.HEIGHT; i += 16) {</span>
+<span class="fc" id="L207">            String Map_row = this.MapString.get(i / 16);</span>
+<span class="fc bfc" id="L208" title="All 2 branches covered.">            for (int j = 0; j&lt; this.WIDTH; j += 16) {</span>
+<span class="fc" id="L209">                char temp_char = Map_row.charAt(j / 16);</span>
+<span class="fc bfc" id="L210" title="All 2 branches covered.">                if (temp_char == 'a') {</span>
+<span class="fc" id="L211">                    Ghost temp_ghost = new Ambusher(j, i, ImgMap.get(&quot;GhostAmbusherImg&quot;), this.MapObjects, waka, this.Intersections, this.ModeTime, GameOriData, ImgMap);</span>
+<span class="fc" id="L212">                    GameInterface.add(temp_ghost);</span>
+<span class="fc" id="L213">                    GhostList.add(temp_ghost);</span>
+
+<span class="fc bfc" id="L215" title="All 2 branches covered.">                } else if (temp_char == 'i') {</span>
+<span class="fc" id="L216">                    Ghost temp_ghost = new Ignorant(j, i, ImgMap.get(&quot;GhostIgnorantImg&quot;), this.MapObjects, waka, this.Intersections, this.ModeTime,GameOriData, ImgMap);</span>
+<span class="fc" id="L217">                    GameInterface.add(temp_ghost);</span>
+<span class="fc" id="L218">                    GhostList.add(temp_ghost);</span>
+                    
+<span class="fc bfc" id="L220" title="All 2 branches covered.">                } else if (temp_char == 'c') {</span>
+                    
+<span class="fc" id="L222">                    this.chaser = new Chaser(j, i, ImgMap.get(&quot;GhostChaserImg&quot;), this.MapObjects, waka, this.Intersections, this.ModeTime,GameOriData,ImgMap);</span>
+
+<span class="fc" id="L224">                    GameInterface.add(chaser);</span>
+<span class="fc" id="L225">                    GhostList.add(chaser);</span>
+<span class="fc bfc" id="L226" title="All 2 branches covered.">                } else if (temp_char == 'w') {</span>
+<span class="pc bpc" id="L227" title="1 of 2 branches missed.">                    if (this.chaser != null) {</span>
+<span class="fc" id="L228">                        Ghost temp_ghost = new Whim(j, i, ImgMap.get(&quot;GhostWhimImg&quot;), this.MapObjects, waka, this.Intersections, this.ModeTime, GameOriData, ImgMap, this.chaser);</span>
+                        
+<span class="fc" id="L230">                        GameInterface.add(temp_ghost);</span>
+<span class="fc" id="L231">                        GhostList.add(temp_ghost);</span>
+<span class="fc" id="L232">                    } else {</span>
+<span class="nc" id="L233">                        CreatWhim = true;</span>
+<span class="nc" id="L234">                        whimX = j;</span>
+<span class="nc" id="L235">                        whimY = i;</span>
+                    }
+                }
+            }
+        }
+        //there will always a chaser in the map;
+<span class="pc bpc" id="L241" title="1 of 2 branches missed.">        if (CreatWhim) {</span>
+            
+<span class="nc" id="L243">            Ghost temp_ghost = new Whim(whimX, whimY, ImgMap.get(&quot;GhostWhimImg&quot;), this.MapObjects, waka, this.Intersections, this.ModeTime, GameOriData, ImgMap, this.chaser);</span>
+<span class="nc" id="L244">            GameInterface.add(temp_ghost);</span>
+<span class="nc" id="L245">            GhostList.add(temp_ghost);</span>
+<span class="nc" id="L246">            CreatWhim = false;</span>
+        }
+<span class="fc" id="L248">    }</span>
+
+    /**
+     * Retuen a list which contain all fruit instance of the game.
+     * @return A list of Fruits
+     */
+    public ArrayList&lt;Fruit&gt; getFruitList(){
+<span class="fc" id="L255">        return this.FruitsList;</span>
+    }
+    /**
+     * Return a list which contain all Ghosts instance of the game.
+     * @return A list of Ghosts.
+     */
+    public ArrayList&lt;Ghost&gt; getGhostList() {
+<span class="fc" id="L262">        return this.GhostList;</span>
+    }
+    
+    /**
+     * Set the list of node that the ghost should make a dicesion.
+     * &lt;br&gt;When a node could make a turn in left or right, and it could make a turn in up or down, means it is a intersection.&lt;br&gt;
+     * Return true if success, false if Map.object is null.&lt;br&gt;
+     * This method should run after MapObjects already built.&lt;br&gt;
+     * @return true if set intersections sucess, false if map.object is null.
+     */
+    public boolean setIntersections() {
+<span class="pc bpc" id="L273" title="1 of 2 branches missed.">        if (this.MapObjects == null) {</span>
+<span class="nc" id="L274">            return false;</span>
+        }
+<span class="fc bfc" id="L276" title="All 2 branches covered.">        for (MapObjects m : this.MapObjects) {</span>
+<span class="fc bfc" id="L277" title="All 2 branches covered.">            if (m.getReachable()) {</span>
+<span class="fc bfc" id="L278" title="All 4 branches covered.">                if (waka.targetBlock(m.getX() + 16, m.getY()) || waka.targetBlock(m.getX() - 16, m.getY())) {</span>
+<span class="fc bfc" id="L279" title="All 4 branches covered.">                    if (waka.targetBlock(m.getX(), m.getY() + 16) || waka.targetBlock(m.getX(), m.getY() - 16)) {</span>
+<span class="fc" id="L280">                        Intersections.add(m);</span>
+                    }
+                }
+            }
+<span class="fc" id="L284">        }</span>
+<span class="fc" id="L285">        return true;</span>
+    }
+
+    /**
+     * Read the map file and build the waka at original coordinate with necessary variables.
+     * &lt;br&gt;This method should run after Mapobjects already built.&lt;br&gt;
+     */
+    public void buildWaka() {
+
+<span class="fc bfc" id="L294" title="All 2 branches covered.">        for (int i = 0; i &lt; this.HEIGHT; i += 16) {</span>
+<span class="fc" id="L295">            String Map_row = this.MapString.get(i / 16);</span>
+<span class="fc bfc" id="L296" title="All 2 branches covered.">            for (int j = 0; j&lt; this.WIDTH; j += 16) {</span>
+<span class="fc" id="L297">                char temp_char = Map_row.charAt(j / 16);</span>
+<span class="fc bfc" id="L298" title="All 2 branches covered.">                if (temp_char == 'p') {</span>
+<span class="fc" id="L299">                    this.waka = new Waka(j, i, ImgMap.get(&quot;wakaLeft&quot;), MapObjects, this.GameOriData, ImgMap);</span>
+                }
+            }
+        }
+<span class="fc" id="L303">    }</span>
+
+    /**
+     * Read the mapfile and set all the game object which could not move in the gmae (fruit, superfruit, soda, MapObjects).
+     * &lt;br&gt; The objects could not move should be created by this method and add to the MapObject list.&lt;br&gt;
+     * &lt;br&gt; This method should run first in the setup method after read map.&lt;br&gt;
+     */
+    public void setMapObjects() {
+<span class="fc bfc" id="L311" title="All 2 branches covered.">        for (int i = 0; i &lt; this.HEIGHT; i += 16) {</span>
+<span class="fc" id="L312">            String Map_row = this.MapString.get(i / 16);</span>
+<span class="fc bfc" id="L313" title="All 2 branches covered.">            for (int j = 0; j&lt; this.WIDTH; j += 16) {</span>
+<span class="fc" id="L314">                char temp_char = Map_row.charAt(j / 16);</span>
+            
+<span class="fc bfc" id="L316" title="All 2 branches covered.">                if (temp_char == '1') {</span>
+                    
+<span class="fc" id="L318">                    MapObjects temp = new MapObjects(j,i,ImgMap.get(&quot;MapHorizontalImg&quot;),false);</span>
+<span class="fc" id="L319">                    this.MapObjects.add(temp);</span>
+<span class="fc" id="L320">                    GameInterface.add(temp);</span>
+<span class="fc bfc" id="L321" title="All 2 branches covered.">                } else if (temp_char == '2') {</span>
+                    
+<span class="fc" id="L323">                    MapObjects temp = new MapObjects(j,i,ImgMap.get(&quot;MapVerticalImg&quot;),false);</span>
+<span class="fc" id="L324">                    this.MapObjects.add(temp);</span>
+<span class="fc" id="L325">                    GameInterface.add(temp);</span>
+<span class="fc bfc" id="L326" title="All 2 branches covered.">                } else if (temp_char == '3') {</span>
+                 
+<span class="fc" id="L328">                    MapObjects temp = new MapObjects(j,i,ImgMap.get(&quot;MapUpLeftImg&quot;),false);</span>
+<span class="fc" id="L329">                    this.MapObjects.add(temp);</span>
+<span class="fc" id="L330">                    GameInterface.add(temp);</span>
+<span class="fc bfc" id="L331" title="All 2 branches covered.">                } else if (temp_char == '4') {</span>
+                    
+<span class="fc" id="L333">                    MapObjects temp = new MapObjects(j,i,ImgMap.get(&quot;MapUpRightImg&quot;),false);</span>
+<span class="fc" id="L334">                    this.MapObjects.add(temp);</span>
+<span class="fc" id="L335">                    GameInterface.add(temp);</span>
+<span class="fc bfc" id="L336" title="All 2 branches covered.">                } else if (temp_char == '5') {</span>
+                    
+<span class="fc" id="L338">                    MapObjects temp = new MapObjects(j,i,ImgMap.get(&quot;MapDownLeftImg&quot;),false);</span>
+<span class="fc" id="L339">                    this.MapObjects.add(temp);</span>
+<span class="fc" id="L340">                    GameInterface.add(temp);</span>
+<span class="fc bfc" id="L341" title="All 2 branches covered.">                } else if (temp_char == '6') {</span>
+<span class="fc" id="L342">                    MapObjects temp = new MapObjects(j,i,ImgMap.get(&quot;MapDownRightImg&quot;),false);</span>
+<span class="fc" id="L343">                    this.MapObjects.add(temp);</span>
+<span class="fc" id="L344">                    GameInterface.add(temp);</span>
+<span class="fc bfc" id="L345" title="All 2 branches covered.">                } else if (temp_char == '7') {</span>
+<span class="fc" id="L346">                    Fruit temp = new Fruit(j, i, ImgMap.get(&quot;FruitImg&quot;), true, this.waka);</span>
+<span class="fc" id="L347">                    this.MapObjects.add(temp);</span>
+<span class="fc" id="L348">                    GameInterface.add(temp);</span>
+<span class="fc" id="L349">                    FruitsList.add(temp);</span>
+<span class="fc bfc" id="L350" title="All 2 branches covered.">                } else if (temp_char == '8') {</span>
+<span class="fc" id="L351">                    SuperFruit temp = new SuperFruit(j, i, ImgMap.get(&quot;FruitImg&quot;), true, this.waka);</span>
+<span class="fc" id="L352">                    this.MapObjects.add(temp);</span>
+<span class="fc" id="L353">                    GameInterface.add(temp);</span>
+<span class="fc" id="L354">                    FruitsList.add(temp);</span>
+<span class="fc bfc" id="L355" title="All 2 branches covered.">                }  else if (temp_char == '9') {</span>
+<span class="fc" id="L356">                    SuperSoda temp = new SuperSoda(j, i, ImgMap.get(&quot;Soda&quot;), true, this.waka);</span>
+<span class="fc" id="L357">                    this.MapObjects.add(temp);</span>
+<span class="fc" id="L358">                    GameInterface.add(temp);</span>
+<span class="fc" id="L359">                    FruitsList.add(temp);</span>
+<span class="fc bfc" id="L360" title="All 2 branches covered.">                }  else if (temp_char != '0') {</span>
+<span class="fc" id="L361">                    MapObjects temp = new MapObjects(j, i, null, true);</span>
+<span class="fc" id="L362">                    temp.setAlive(false);</span>
+<span class="fc" id="L363">                    this.MapObjects.add(temp);</span>
+                }
+            }
+        }
+<span class="fc" id="L367">    }</span>
+
+    /**
+     * Read the json file get the game original data.
+     * &lt;br&gt;Return true if success false if jsonfile not exist.&lt;br&gt;
+     * Read all the data from json and set as hashmap.
+     * This method should run first when build setup().&lt;br&gt;
+     * @return True is success, false if json file not exist.
+     */
+    public boolean readJson() {
+        
+<span class="fc" id="L378">        JSONParser jsonparse = new JSONParser();</span>
+        try {
+<span class="fc" id="L380">            FileReader reader = new FileReader(&quot;config.json&quot;);</span>
+<span class="fc" id="L381">            Object obj = jsonparse.parse(reader);</span>
+<span class="fc" id="L382">            JSONObject empjsonobj = (JSONObject)obj;</span>
+<span class="fc" id="L383">            this.MapFileName = (String)empjsonobj.get(&quot;map&quot;);</span>
+            
+
+<span class="fc" id="L386">            Long temp = (Long)empjsonobj.get(&quot;lives&quot;);</span>
+<span class="fc" id="L387">            GameOriData.put(&quot;lives&quot;,temp.intValue());</span>
+
+<span class="fc" id="L389">            temp = (Long)empjsonobj.get(&quot;speed&quot;);</span>
+<span class="fc" id="L390">            GameOriData.put(&quot;speed&quot;,temp.intValue());</span>
+
+<span class="fc" id="L392">            temp = (Long)empjsonobj.get(&quot;frightenedLength&quot;);</span>
+<span class="fc" id="L393">            GameOriData.put(&quot;FrightenedModeTime&quot;,temp.intValue());</span>
+
+<span class="fc" id="L395">            temp = (Long)empjsonobj.get(&quot;soda-can&quot;);</span>
+<span class="fc" id="L396">            GameOriData.put(&quot;SodaTime&quot;,temp.intValue());</span>
+            
+            
+<span class="fc" id="L399">            JSONArray array1 = (JSONArray)empjsonobj.get(&quot;modeLengths&quot;);</span>
+<span class="fc bfc" id="L400" title="All 2 branches covered.">            for (Object i : array1) {</span>
+<span class="fc" id="L401">                this.ModeTime.add((Long)i);</span>
+<span class="fc" id="L402">            }</span>
+            
+<span class="nc" id="L404">        } catch(Exception e) {</span>
+<span class="nc" id="L405">            System.out.println(&quot;No such json file.&quot;);</span>
+<span class="nc" id="L406">            return false;</span>
+<span class="fc" id="L407">        }</span>
+<span class="fc" id="L408">        return true;</span>
+    }
+
+    /**
+     * Read mapfile which read from the json file.
+     * &lt;br&gt;Set a map string which could been process by all other methods.&lt;br&gt;
+     * Return true if success, false if mapfile not exist.&lt;br&gt;
+     * This method should run just after readJson() called in setup().&lt;br&gt;
+     * @return true if success, false if file not exist.
+     */
+    public boolean readMap() {
+        
+<span class="fc" id="L420">        ArrayList&lt;String&gt; result = new ArrayList&lt;String&gt;();</span>
+        try {
+<span class="fc" id="L422">            File fname = new File(this.MapFileName);</span>
+<span class="fc" id="L423">            Scanner scan = new Scanner(fname);</span>
+<span class="fc bfc" id="L424" title="All 2 branches covered.">            while(scan.hasNextLine()){</span>
+<span class="fc" id="L425">                result.add(scan.nextLine());</span>
+            }
+<span class="fc" id="L427">            scan.close();</span>
+<span class="nc" id="L428">        } catch(FileNotFoundException e) {</span>
+<span class="nc" id="L429">            System.out.println(&quot;map File not exist.&quot;);</span>
+<span class="nc" id="L430">            return false;</span>
+<span class="fc" id="L431">        }</span>
+
+<span class="fc" id="L433">        this.MapString = result;</span>
+<span class="fc" id="L434">        return true;</span>
+    }
+
+    /**
+     * Return the game original data read from json.
+     * @return  Return hashmap which contain original data read from json.
+     */
+    public HashMap&lt;String,Integer&gt; getGameOriData() {
+<span class="fc" id="L442">        return this.GameOriData;</span>
+    }
+
+    /**
+     * Return the list of intersections
+     * @return Return the list of intersections
+     */
+    public ArrayList&lt;MapObjects&gt; getIntersections() {
+<span class="fc" id="L450">        return Intersections;</span>
+    }
+
+    /**
+     * Return the list of mapobjects
+     * @return Return the list of mapObjects
+     */
+    public ArrayList&lt;MapObjects&gt; getMapObjects() {
+<span class="fc" id="L458">        return MapObjects;</span>
+    }
+    
+    /**
+     * Return the chaser instance
+     * @return Return the chaser instance.
+     */
+    public Chaser getChaser() {
+<span class="fc" id="L466">        return chaser;</span>
+    }
+    
+    /**
+     * Return the game interface list, which contain all game objects in, include gamescreen.
+     * @return  return the game interface list.
+     */
+    public ArrayList&lt;GameInterface&gt; getGameInterface() {
+<span class="fc" id="L474">        return GameInterface;</span>
+    }
+
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

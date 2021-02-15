@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Waka.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Final_Asm2</a> &gt; <a href="index.source.html" class="el_package">ghost</a> &gt; <span class="el_source">Waka.java</span></div><h1>Waka.java</h1><pre class="source lang-java linenums">package ghost;
+import processing.core.PImage;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+
+
+public class Waka extends MoveObject{
+
+<span class="fc" id="L10">    private int frame = 0;</span>
+    private int goingDirX;
+    private int goingDirY;
+    private boolean FrightenedMode;
+    private boolean SodaMode;
+<span class="fc" id="L15">    private int FrightTimeCount = 0;</span>
+
+<span class="fc" id="L17">    private int SodaTimeCount = 0;</span>
+<span class="fc" id="L18">    private boolean reSetGame = false;</span>
+    
+    /**
+     * Waka constructor.
+     * @param x coordinate x
+     * @param y coordinate y
+     * @param sprite sprite Waka image (original face left)
+     * @param MapObjects MapObjects Objects which could not move in the game.
+     * @param GameOriData GameOriData the game original data read from json file.
+     * @param ImgMap ImgMap the list with all image use in the game in it.
+     */
+    public Waka(int x, int y, PImage sprite, ArrayList&lt;MapObjects&gt; MapObjects, HashMap&lt;String,Integer&gt; GameOriData, HashMap&lt;String,PImage&gt; ImgMap) {
+<span class="fc" id="L30">        super(x, y, sprite, MapObjects, GameOriData, ImgMap);</span>
+<span class="fc" id="L31">        setSprit(ImgMap.get(&quot;wakaLeft&quot;));</span>
+<span class="fc" id="L32">    }</span>
+
+    /**
+     * The triger to reset the game.
+     * @param b true to reset the game
+     */
+    public void setResetGame(boolean b) {
+<span class="fc" id="L39">        this.reSetGame = b;</span>
+<span class="fc" id="L40">    }</span>
+
+    /**
+     * Return the boolean value of resetGame.
+     * &lt;br&gt;if true, the game should be reset to original coordinate.
+     * @return Return the boolean value of reset Game.
+     */
+    public boolean getResetGame() {
+<span class="fc" id="L48">        return this.reSetGame;</span>
+    }
+
+    /**
+     * The triger of Frightend mode.
+     * @param i true if the frightend mode on, false off.
+     */
+    public void setFrightenedMode(boolean i) {
+<span class="fc" id="L56">        this.FrightenedMode = i;</span>
+<span class="fc" id="L57">    }</span>
+
+    /**
+     * The triger of Soda mode.
+     * @param i true if the Soda mode on, false off.
+     */
+    public void setSodaMode(boolean i) {
+<span class="fc" id="L64">        this.SodaMode = i;</span>
+<span class="fc" id="L65">    }</span>
+
+    /**
+     * Return the triger value of frightend mode
+     * @return Return true if Frighend mod should on.
+     */
+    public boolean getFrightenedMode() {
+<span class="fc" id="L72">        return this.FrightenedMode;</span>
+    }
+
+    /**
+     * Return the triger value of Soda mode
+     * @return Return true if Soda mod should on.
+     */
+    public boolean getSodaMode() {
+<span class="fc" id="L80">        return this.SodaMode;</span>
+    }
+
+    
+    // public int getLives() {
+    //     return super.getLives();
+    // }
+    
+    /**
+     * Radar keep tracking the aound block set wheather the block is reachable.
+     * &lt;br&gt;The radar for waka is a bit different than ghost.&lt;br&gt;
+     * Cause if controled by user, so when user change it direction up or down, lefe right cannot move untill next node check.
+     * when user change it direction left or rignt, up down cannot move untill next node check.
+     */
+    public void radar() {
+
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        if (getTouchnode()) {</span>
+<span class="fc" id="L97">            setRightmoveable(this.targetBlock(this.getX() + 16, this.getY()));</span>
+<span class="fc" id="L98">            setLeftmoveable(this.targetBlock(this.getX() - 16, this.getY()));</span>
+<span class="fc" id="L99">            setUpmoveable(this.targetBlock(this.getX() , this.getY() - 16));            </span>
+<span class="fc" id="L100">            setDownmoveable(this.targetBlock(this.getX() , this.getY() + 16));</span>
+<span class="fc" id="L101">            setTouchnode(false);</span>
+<span class="pc bpc" id="L102" title="1 of 4 branches missed.">        } else if (getTouchnode() == false &amp;&amp; this.getY() != this.getPriY()) {</span>
+<span class="fc" id="L103">            setLeftmoveable(false);</span>
+<span class="fc" id="L104">            setRightmoveable(false);</span>
+<span class="pc bpc" id="L105" title="2 of 4 branches missed.">        } else if (getTouchnode() == false &amp;&amp; this.getX() != this.getPriX()) {</span>
+<span class="fc" id="L106">            setUpmoveable(false);</span>
+<span class="fc" id="L107">            setDownmoveable(false);</span>
+        }
+<span class="fc" id="L109">    }</span>
+
+
+    /**
+     * Hode the user input until the input direction is moveable.
+     */
+    public void checkMoveable() {
+<span class="fc bfc" id="L116" title="All 4 branches covered.">        if (this.goingDirX == 0 &amp;&amp; this.goingDirY == -1) {</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">            if (getUpMoveable()) {</span>
+<span class="fc" id="L118">                this.setDirect(0, -1);</span>
+                
+            }
+<span class="fc bfc" id="L121" title="All 4 branches covered.">        } else if (this.goingDirX == 0 &amp;&amp;this.goingDirY == 1) {</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">            if (getDownMoveable()) {</span>
+<span class="fc" id="L123">                this.setDirect(0, 1);</span>
+            }
+<span class="pc bpc" id="L125" title="1 of 4 branches missed.">        } else if (this.goingDirX == -1 &amp;&amp;this.goingDirY == 0) {</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">            if (getLeftMoveable()) {</span>
+<span class="fc" id="L127">                this.setDirect(-1, 0);</span>
+            }
+<span class="pc bpc" id="L129" title="1 of 4 branches missed.">        } else if (this.goingDirX == 1 &amp;&amp;this.goingDirY == 0) {</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">            if (getRightMoveable()) {</span>
+<span class="fc" id="L131">                this.setDirect(1, 0);</span>
+            }
+        }
+<span class="fc" id="L134">    }</span>
+
+    /**
+     * Simple move method wich image change for waka.
+     * &lt;br&gt;Waka show different picture with different direction.&lt;br&gt;
+     */
+    public void move() {
+<span class="pc bpc" id="L141" title="1 of 4 branches missed.">        if (getDx() == -1 &amp;&amp; getDy() == 0) {//left</span>
+<span class="fc" id="L142">            this.setSprit(getImgMap().get(&quot;wakaLeft&quot;));</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">            if (getLeftMoveable()) {</span>
+<span class="fc" id="L144">                this.setX(getSpeed() * getDx());</span>
+            }
+
+        }
+<span class="pc bpc" id="L148" title="1 of 4 branches missed.">        if (getDx() == 1 &amp;&amp; getDy() == 0) {//right</span>
+<span class="fc" id="L149">            this.setSprit(getImgMap().get(&quot;wakaRight&quot;));</span>
+           
+<span class="fc bfc" id="L151" title="All 2 branches covered.">            if (getRightMoveable()) {</span>
+<span class="fc" id="L152">                this.setX(getSpeed() * getDx());</span>
+            }
+
+        }
+<span class="fc bfc" id="L156" title="All 4 branches covered.">        if (getDx() == 0 &amp;&amp; getDy() == -1) {//up</span>
+<span class="fc" id="L157">            this.setSprit(getImgMap().get(&quot;wakaUp&quot;));</span>
+<span class="fc bfc" id="L158" title="All 2 branches covered.">            if (getUpMoveable()) {</span>
+<span class="fc" id="L159">                this.setY(getSpeed() * getDy());</span>
+            }
+           
+        }
+<span class="fc bfc" id="L163" title="All 4 branches covered.">        if (getDx() == 0 &amp;&amp; getDy() == 1) {//down</span>
+<span class="fc" id="L164">            this.setSprit(getImgMap().get(&quot;wakaDown&quot;));</span>
+<span class="fc bfc" id="L165" title="All 2 branches covered.">            if (getDownMoveable()) {</span>
+<span class="fc" id="L166">                this.setY(getSpeed() * getDy());</span>
+            }        
+           
+        }
+<span class="fc" id="L170">    }</span>
+
+    /**
+     * Main logic of waka, run when waka alive.
+     * &lt;br&gt; Change to img wakaclose every 8 frame.&lt;br&gt;
+     * Check if just pass a node, if so, radar on.&lt;br&gt;
+     * The radar set up which direction is moveable.&lt;br&gt;
+     * The checMOveable check the user input direction whether moveable.&lt;br&gt;
+     * If in Frighten mode or Soda mode, count time.&lt;br&gt;
+     */
+    public void tick(){
+<span class="fc bfc" id="L181" title="All 2 branches covered.">        if (getAlive()) {</span>
+
+<span class="fc" id="L183">            checkLocation();</span>
+<span class="fc" id="L184">            radar();</span>
+<span class="fc" id="L185">            checkMoveable();</span>
+<span class="fc" id="L186">            move();</span>
+<span class="fc" id="L187">            this.frame++;</span>
+        
+<span class="fc bfc" id="L189" title="All 2 branches covered.">            if (frame &gt; 8) {</span>
+<span class="fc" id="L190">                this.setSprit(getImgMap().get(&quot;wakaClose&quot;));</span>
+<span class="fc bfc" id="L191" title="All 2 branches covered.">                if (frame &gt; 16) {</span>
+<span class="fc" id="L192">                    this.frame = 0;</span>
+                }
+            }
+<span class="fc" id="L195">            countFrightTime();</span>
+<span class="fc" id="L196">            countSodaTime();</span>
+<span class="fc" id="L197">            checkAlive();</span>
+        }        
+<span class="fc" id="L199">    }</span>
+
+    /**
+     * If waka have no more lives, set it as dead.
+     */
+    public void checkAlive() {
+<span class="fc bfc" id="L205" title="All 2 branches covered.">        if (getLives() &lt;= 0) {</span>
+<span class="fc" id="L206">            this.setAlive(false);</span>
+        }
+<span class="fc" id="L208">    }</span>
+
+    /**
+     * Get the direction input from builder.
+     * @param dx input x direction
+     * @param dy input y direction
+     */
+    public void sendDirect(int dx, int dy) {
+<span class="fc" id="L216">        this.goingDirX = dx;</span>
+<span class="fc" id="L217">        this.goingDirY = dy;</span>
+<span class="fc" id="L218">    }</span>
+
+    /**
+     * If in Frighten mode, count the time.
+     */
+    public void countFrightTime() {
+<span class="fc bfc" id="L224" title="All 2 branches covered.">        if (getFrightenedMode()) {</span>
+<span class="fc" id="L225">            this.FrightTimeCount++;</span>
+        }
+
+<span class="fc bfc" id="L228" title="All 2 branches covered.">        if (this.FrightTimeCount / 60 == getFrightenedLength()) {</span>
+<span class="fc" id="L229">            this.setFrightenedMode(false);</span>
+            //System.out.printf(&quot;Fright mode end, %d seconds\n&quot;, getFrightenedLength());
+<span class="fc" id="L231">            this.FrightTimeCount = 0;</span>
+        }
+<span class="fc" id="L233">    }</span>
+
+    /**
+     * If in Soda mode, count the time.
+     */
+    public void countSodaTime() {
+<span class="fc bfc" id="L239" title="All 2 branches covered.">        if (!getFrightenedMode()) {</span>
+<span class="fc bfc" id="L240" title="All 2 branches covered.">            if (getSodaMode()) {</span>
+<span class="fc" id="L241">                this.SodaTimeCount++;</span>
+            }
+    
+<span class="fc bfc" id="L244" title="All 2 branches covered.">            if (this.SodaTimeCount / 60 == getSodaTime()) {</span>
+<span class="fc" id="L245">                this.setSodaMode(false);</span>
+                //System.out.printf(&quot;Soda mode end, %d seconds\n&quot;, getSodaTime());
+<span class="fc" id="L247">                this.SodaTimeCount = 0;</span>
+            }
+        }
+<span class="fc" id="L250">    }</span>
+
+    public void setFrightTime(int i) {
+<span class="fc" id="L253">        this.FrightTimeCount = i;</span>
+<span class="fc" id="L254">    }</span>
+
+    public void setSodaTime(int i) {
+<span class="fc" id="L257">        this.SodaTimeCount = i;</span>
+<span class="fc" id="L258">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Ghost.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Final_Asm2</a> &gt; <a href="index.source.html" class="el_package">ghost</a> &gt; <span class="el_source">Ghost.java</span></div><h1>Ghost.java</h1><pre class="source lang-java linenums">package ghost;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import processing.core.PApplet;
+import processing.core.PImage;
+
+
+public class Ghost extends MoveObject{
+    
+<span class="fc" id="L12">    private int timer = 0;</span>
+<span class="fc" id="L13">    private int ModeNumber = 0;</span>
+    private double distence;
+    private double distenceToWaka;
+<span class="fc" id="L16">    private boolean scatterMode = true;</span>
+    private boolean chaseMode;
+    private boolean FrightenedMode;
+    private boolean SodaMode;
+    private boolean RandomMode;
+    private static boolean deBugMode;
+    private ArrayList&lt;MapObjects&gt; Intersections;
+    private ArrayList&lt;Long&gt; ModeTime;
+    private Waka waka;
+    private PImage GhostImg;
+
+    
+    /**
+     * Ghost constructor.
+     * &lt;br&gt;Creat Ghost instance with necessary variables.&lt;br&gt;
+     * @param x coordinate x.
+     * @param y coordinate y.
+     * @param sprite Ghost image.
+     * @param MapObjects A list conatin all mapObjects(),the objects could not move in the game.
+     * @param waka The waka
+     * @param Intersections A list of intersections node where ghosts could make a ture.
+     * @param ModeTime The different mode time read from json file.
+     * @param GameOriData The game original Data read from json(i.e. speed).
+     * @param ImgMap All images need to be used in this gmae.
+     */
+    public Ghost(int x, int y, PImage sprite, ArrayList&lt;MapObjects&gt; MapObjects, Waka waka, ArrayList&lt;MapObjects&gt; Intersections,ArrayList&lt;Long&gt; ModeTime,HashMap&lt;String,Integer&gt; GameOriData , HashMap&lt;String,PImage&gt; ImgMap ) {
+<span class="fc" id="L42">        super(x, y, sprite, MapObjects, GameOriData, ImgMap);</span>
+<span class="fc" id="L43">        this.waka = waka;</span>
+<span class="fc" id="L44">        this.Intersections = Intersections;</span>
+<span class="fc" id="L45">        this.ModeTime = ModeTime;</span>
+<span class="fc" id="L46">        this.GhostImg = sprite;</span>
+
+<span class="fc" id="L48">    }</span>
+
+    /**
+     * Return the Intersection list.
+     * @return Return the Intersection list.
+     */
+    public ArrayList&lt;MapObjects&gt; getIntersections() {
+<span class="fc" id="L55">        return this.Intersections;</span>
+    }
+
+    /**
+     *Return the waka instance. 
+     * @return Return the waka instance. 
+     */
+    public Waka getWaka(){
+<span class="fc" id="L63">        return this.waka;</span>
+    }
+
+    /**
+     * Checl whether the mode is Scater 
+     * @return Return scatterMode boolean value
+     */
+    public boolean getScaterMode() {
+<span class="fc" id="L71">        return this.scatterMode;</span>
+    }
+
+    /**
+     * Checl whether the mode is Chase 
+     * @return Return chaseMode boolean value
+     */
+    public boolean getChaseMode() {
+<span class="fc" id="L79">        return this.chaseMode;</span>
+    }
+
+    /**
+     * Checl whether the mode is Frighten.
+     * @return Return FrightenedMode boolean value
+     */
+    public boolean getFrightenedMode() {
+<span class="fc" id="L87">        return this.FrightenedMode;</span>
+    }
+    
+    /**
+     * Interator the timer by 1.
+     * &lt;br&gt; It is the time count for different modes except frighten and soda.&lt;br&gt; 
+     */
+    public void setTimer() {
+<span class="fc" id="L95">        this.timer++;</span>
+<span class="fc" id="L96">    }</span>
+
+    /**
+     * Set the distence between waka and Ghost.
+     */
+    public void setWakaDistence() {
+<span class="fc" id="L102">        this.distenceToWaka = culDistence(getX(), getY(), waka.getX(), waka.getY());</span>
+<span class="fc" id="L103">    }</span>
+
+    /**
+     * Check whether to use the debug mode.
+     * &lt;br&gt;listening the user's keyboard if it is 32 which means space.&lt;br&gt;
+     * If keyAscii == 32, Debug mode on.&lt;br&gt;
+     * @param keyAscii the key value pass from builder
+     */
+    public static void sendKeyvalue(int keyAscii) {
+        
+<span class="fc bfc" id="L113" title="All 2 branches covered.">        if (keyAscii == 32) {</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">            if (deBugMode) {</span>
+<span class="fc" id="L115">                deBugMode = false;</span>
+            } else {
+<span class="fc" id="L117">                deBugMode = true;</span>
+            }
+        }
+<span class="fc" id="L120">    }</span>
+
+    /**
+     * The interface implements, mean logic of Ghosts.
+     * &lt;br&gt;If the Ghost alive the logic keep running else all logic not update but the timecount and modechange.&lt;br&gt;
+     * The Modechange method keep the dead ghost counting mode time, so when every thing reset, all ghost have same modetime.&lt;br&gt;
+     */
+    public void tick() {
+        
+<span class="fc bfc" id="L129" title="All 2 branches covered.">        if (getAlive()) {</span>
+<span class="fc" id="L130">            checkLocation();</span>
+<span class="fc" id="L131">            radar();</span>
+<span class="fc" id="L132">            PassIntersection();</span>
+<span class="fc" id="L133">            move();</span>
+<span class="fc" id="L134">            ModeChange();</span>
+<span class="fc" id="L135">            checkIfTouchWaka();</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">            if (!getFrightenedMode()) {</span>
+<span class="fc" id="L137">                setTimer();</span>
+            }
+        } else {
+<span class="fc bfc" id="L140" title="All 2 branches covered.">            if (!getFrightenedMode()) {</span>
+<span class="fc" id="L141">                setTimer();</span>
+            }
+<span class="fc" id="L143">            ModeChange();</span>
+        }
+        //checkAlive();
+<span class="fc" id="L146">    }</span>
+    
+    /**
+     * Draw method, drw ghost on screen with offest 8 pixel.
+     * @param app The game window instance.
+     */
+    public void draw(PApplet app) {
+<span class="fc bfc" id="L153" title="All 2 branches covered.">        if (getAlive()) {</span>
+<span class="fc" id="L154">            app.image(getSprite(), getX() - getOffset(), getY() - getOffset());</span>
+<span class="pc bpc" id="L155" title="3 of 4 branches missed.">            if (deBugMode &amp;&amp; !getFrightenedMode()) {</span>
+<span class="nc" id="L156">                app.line(getX() + 8, getY() + 8, getTargetX() + 8, getTargetY() + 8);</span>
+<span class="nc" id="L157">                app.stroke(200);</span>
+            }
+        }
+<span class="fc" id="L160">    }</span>
+
+    /**
+     * Whether the ghost is current under debug mode.
+     * @return Return true if debug, false no debug.&lt;br&gt;
+     */
+    public boolean getDebug() {
+<span class="fc" id="L167">        return deBugMode;</span>
+    }
+
+    /**
+     * Check what mode shoud the ghost use.
+     * &lt;br&gt;The timer count the time in milisecond, and following the time list read from json list.&lt;br&gt;
+     * The timer of scatter off and chase will not count when in Frighten mode.&lt;br&gt;
+     * 
+     */
+    public void ModeChange() {
+<span class="fc" id="L177">        FrightenedMode = waka.getFrightenedMode();</span>
+<span class="fc" id="L178">        checkFrightenedMode();</span>
+<span class="fc" id="L179">        checkSodaMode();</span>
+<span class="fc bfc" id="L180" title="All 2 branches covered.">        if (timer/60 == this.ModeTime.get(ModeNumber)){</span>
+<span class="fc bfc" id="L181" title="All 2 branches covered.">            if (ModeNumber % 2 == 0) {</span>
+<span class="fc" id="L182">                this.chaseMode = true;</span>
+<span class="fc" id="L183">                this.scatterMode = false;</span>
+                //System.out.printf(&quot;ChaseMode mode on, Scatter off, time:%d\n&quot;,timer/60);
+            } else {
+<span class="fc" id="L186">                this.scatterMode = true;</span>
+<span class="fc" id="L187">                this.chaseMode = false;</span>
+                //System.out.printf(&quot;Scatter mode on, chaseModeon off, time:%d\n&quot;,timer/60);
+            }
+<span class="fc" id="L190">            ModeNumber += 1;</span>
+<span class="fc" id="L191">            ModeNumber = ModeNumber % ModeTime.size();</span>
+<span class="fc" id="L192">            timer = 0;</span>
+        }
+<span class="fc" id="L194">    }</span>
+
+    /**
+     * Return the ghost current use sprite.
+     * @return Return the ghost current use sprite.
+     */
+    public PImage getGhostImage() {
+<span class="fc" id="L201">        return this.GhostImg;</span>
+    }
+
+    /**
+     * Check the distance between waka and ghost.
+     * &lt;br&gt;If touched, set the waka to original node, and let it face left.&lt;br&gt;
+     * If the ghost in frighten mode, ghost removed from screen
+     */
+    public void checkIfTouchWaka() {
+<span class="fc" id="L210">        setWakaDistence();</span>
+<span class="fc bfc" id="L211" title="All 6 branches covered.">        if (distenceToWaka &lt; 28 &amp;&amp; (waka.getX() == getX() || waka.getY() == getY())) {</span>
+<span class="fc bfc" id="L212" title="All 2 branches covered.">            if (!getFrightenedMode()) {</span>
+                // setX(getOriginalX());
+                // setY(getOriginalY());
+<span class="fc" id="L215">                waka.setX(waka.getOriginalX());</span>
+<span class="fc" id="L216">                waka.setY(waka.getOriginalY());</span>
+<span class="fc" id="L217">                waka.setDirect(-1, 0);</span>
+                //setDirect(1, 0);
+<span class="fc" id="L219">                waka.setLives();</span>
+<span class="fc" id="L220">                waka.setResetGame(true);</span>
+
+            } else {
+<span class="fc" id="L223">                setAlive(false);</span>
+            }
+        }
+<span class="fc" id="L226">    }</span>
+    
+    
+    /**
+     * Check whether the ghost in Frighten mode.
+     * &lt;br&gt;If so, change the sprite to the fright image.&lt;br&gt;
+     * if not change the sprite back.&lt;br&gt;
+     */
+    public void checkFrightenedMode() {
+        
+<span class="fc bfc" id="L236" title="All 2 branches covered.">        if (getFrightenedMode()) {</span>
+<span class="fc" id="L237">            this.setSprit(getImgMap().get(&quot;GhostFrightImg&quot;));</span>
+            
+        } else {
+<span class="fc" id="L240">            this.setSprit(GhostImg);</span>
+        }
+        
+        
+<span class="fc" id="L244">    }</span>
+
+    /**
+     * Check whether the ghost in Soda Mode.
+     * &lt;br&gt;If so, change the ghost to ghostghost sprit(soda img).&lt;br&gt;
+     * If not, change the sprite back.&lt;br&gt;
+     * The Frighten mode have the highest preority.&lt;br&gt;
+     * If in Frighten mode, always count Frighten mode time first, and then soda time, then scater and chaser.
+     */
+    public void checkSodaMode() {
+<span class="fc bfc" id="L254" title="All 2 branches covered.">        if (!getFrightenedMode()) {</span>
+
+<span class="fc bfc" id="L256" title="All 2 branches covered.">            if (waka.getSodaMode()) {</span>
+<span class="fc" id="L257">                this.setSprit(getImgMap().get(&quot;GhostGhostImg&quot;));</span>
+<span class="fc" id="L258">                SodaMode = true;</span>
+                
+            } else {
+<span class="fc" id="L261">                this.setSprit(GhostImg);</span>
+            }
+        }
+<span class="fc" id="L264">    }</span>
+
+    /**
+     * The method keep tracking the grid  around the ghost, whether they are moveable.
+     */
+    public void radar() {
+<span class="fc bfc" id="L270" title="All 2 branches covered.">        if (getTouchnode()) {</span>
+            
+<span class="fc" id="L272">            setLeftmoveable(targetBlock(getX() - 16, getY()));</span>
+<span class="fc" id="L273">            setRightmoveable(targetBlock(getX() + 16, getY()));</span>
+<span class="fc" id="L274">            setUpmoveable(targetBlock(getX() , getY() - 16));            </span>
+<span class="fc" id="L275">            setDownmoveable(targetBlock(getX() , getY() + 16));</span>
+<span class="fc" id="L276">            setTouchnode(false);</span>
+<span class="fc" id="L277">            goBack();</span>
+        }
+<span class="fc" id="L279">    }</span>
+
+    /**
+     * The goback method, for the edge situation when the ghost or waka been triped  with 3 wall around, they could go back.
+     */
+    public void goBack() {
+<span class="fc bfc" id="L285" title="All 6 branches covered.">        if (getLeftMoveable() == false &amp;&amp; getRightMoveable() == false &amp;&amp; getUpMoveable() == false){</span>
+<span class="fc" id="L286">            setDirect(0, 1); //go down</span>
+<span class="pc bpc" id="L287" title="1 of 6 branches missed.">        } else if (getLeftMoveable() == false &amp;&amp; getRightMoveable() == false &amp;&amp; getDownMoveable() == false) {</span>
+<span class="nc" id="L288">            setDirect(0, -1);//go up</span>
+<span class="pc bpc" id="L289" title="1 of 6 branches missed.">        } else if (getDownMoveable() == false &amp;&amp; getRightMoveable() == false &amp;&amp; getUpMoveable() == false) {</span>
+<span class="nc" id="L290">            setDirect(-1, 0);//go left</span>
+<span class="pc bpc" id="L291" title="1 of 6 branches missed.">        } else if (getLeftMoveable() == false &amp;&amp; getDownMoveable() == false &amp;&amp; getUpMoveable() == false) {</span>
+<span class="nc" id="L292">            setDirect(1, 0);//go right</span>
+        }
+
+<span class="fc" id="L295">    }</span>
+
+    /**
+     * This method turnon the radar and set target coordinate in different mode.
+     * &lt;br&gt;When the ghost touch a node which is the point have coordinates could be devided by 16.&lt;br&gt;
+     * Call radar to check which path around is moveable, set target coordinate in different mode.
+     */
+    public void checkLocation() {
+<span class="fc bfc" id="L303" title="All 2 branches covered.">        for(MapObjects m: getMapObjects()) {</span>
+<span class="fc bfc" id="L304" title="All 4 branches covered.">            if (this.getX() == m.getX() &amp;&amp; this.getY() == m.getY()){</span>
+                
+<span class="fc" id="L306">                setTouchnode(true);</span>
+<span class="fc" id="L307">                this.setPriviousLocation(m.getX(), m.getY());</span>
+<span class="fc bfc" id="L308" title="All 2 branches covered.">                if (!getFrightenedMode()) {</span>
+
+<span class="fc bfc" id="L310" title="All 2 branches covered.">                    if (getScaterMode()) {</span>
+<span class="fc" id="L311">                        setTarget(0, 0);</span>
+<span class="pc bpc" id="L312" title="1 of 2 branches missed.">                    } else if (getChaseMode()) {</span>
+<span class="fc" id="L313">                        setTarget(waka.getX(), waka.getY());</span>
+
+                    }
+                }
+                break;
+                
+            }
+<span class="fc" id="L320">        }</span>
+<span class="fc" id="L321">    }</span>
+    /**
+     * Ghost make dissition when touch intersection.
+     * &lt;br&gt;When ghost touch a intersection, first check which direction could move.&lt;br&gt;
+     * Then, check the moveable direction which one have smaller distence to waka.&lt;br&gt;
+     * In different mode, they act in different way.
+     * Scater mode will keep target the cornor, chaser mode will chase the waka in specific logic.&lt;br&gt;
+     * In Frighten mode, the Ghost go random.
+     */
+    public void PassIntersection() {
+<span class="fc bfc" id="L331" title="All 2 branches covered.">        for(MapObjects m: getIntersections()) {</span>
+<span class="fc bfc" id="L332" title="All 4 branches covered.">            if (this.getX() == m.getX() &amp;&amp; this.getY() == m.getY()){</span>
+
+<span class="fc bfc" id="L334" title="All 2 branches covered.">                if (getDx() == -1) {</span>
+<span class="fc" id="L335">                    setRightmoveable(false);</span>
+<span class="fc bfc" id="L336" title="All 2 branches covered.">                } else if (getDx() == 1) {</span>
+<span class="fc" id="L337">                    setLeftmoveable(false);</span>
+<span class="fc bfc" id="L338" title="All 2 branches covered.">                } else if (getDy() == -1) {</span>
+<span class="fc" id="L339">                    setDownmoveable(false);</span>
+<span class="fc bfc" id="L340" title="All 2 branches covered.">                } else if (getDy() == 1) {</span>
+<span class="fc" id="L341">                    setUpmoveable(false);</span>
+                }
+<span class="fc bfc" id="L343" title="All 2 branches covered.">                if (!getFrightenedMode()) {</span>
+<span class="fc" id="L344">                    MakeATurn(getTargetX(), getTargetY());</span>
+<span class="fc" id="L345">                    RandomMode = false;</span>
+                } else {
+<span class="fc" id="L347">                    moveRandom();</span>
+                }
+            }
+<span class="fc" id="L350">        }</span>
+<span class="fc" id="L351">    }</span>
+
+    /**
+     * The method let the ghost go random using math.random method.
+     */
+    public void moveRandom() {
+<span class="fc" id="L357">        ArrayList&lt;int[]&gt; directList = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L358" title="All 2 branches covered.">        if (getLeftMoveable()) {</span>
+<span class="fc" id="L359">            int[] temp = new int[2];</span>
+<span class="fc" id="L360">            temp[0] = -1;</span>
+<span class="fc" id="L361">            temp[1] = 0;</span>
+<span class="fc" id="L362">            directList.add(temp);</span>
+        }
+
+<span class="fc bfc" id="L365" title="All 2 branches covered.">        if (getRightMoveable()) {</span>
+<span class="fc" id="L366">            int[] temp = new int[2];</span>
+<span class="fc" id="L367">            temp[0] = 1;</span>
+<span class="fc" id="L368">            temp[1] = 0;</span>
+<span class="fc" id="L369">            directList.add(temp);</span>
+        }
+
+<span class="fc bfc" id="L372" title="All 2 branches covered.">        if (getUpMoveable()) {</span>
+<span class="fc" id="L373">            int[] temp = new int[2];</span>
+<span class="fc" id="L374">            temp[0] = 0;</span>
+<span class="fc" id="L375">            temp[1] = -1;</span>
+<span class="fc" id="L376">            directList.add(temp);</span>
+        }
+
+<span class="fc bfc" id="L379" title="All 2 branches covered.">        if (getDownMoveable()) {</span>
+<span class="fc" id="L380">            int[] temp = new int[2];</span>
+<span class="fc" id="L381">            temp[0] = 0;</span>
+<span class="fc" id="L382">            temp[1] = 1;</span>
+<span class="fc" id="L383">            directList.add(temp);</span>
+        }
+
+<span class="fc" id="L386">        int [] randomTarget = directList.get((int)(Math.random() * directList.size()));</span>
+<span class="fc" id="L387">        setDirect(randomTarget[0], randomTarget[1]);</span>
+<span class="fc" id="L388">        RandomMode = true;</span>
+
+<span class="fc" id="L390">    }</span>
+
+    /**
+     * Move method let the ghost move by changing the current coordinates.
+     * &lt;br&gt;Only work if the direction is moveable.&lt;br&gt;
+     */
+    public void move() {
+<span class="pc bpc" id="L397" title="1 of 4 branches missed.">        if (getDx() == -1 &amp;&amp; getDy() == 0) {//left</span>
+<span class="fc bfc" id="L398" title="All 2 branches covered.">            if (getLeftMoveable()) {</span>
+<span class="fc" id="L399">                this.setX(getSpeed() * getDx());</span>
+            }
+
+<span class="pc bpc" id="L402" title="1 of 4 branches missed.">        } else if (getDx() == 1 &amp;&amp; getDy() == 0) {//right</span>
+<span class="pc bpc" id="L403" title="1 of 2 branches missed.">            if (getRightMoveable()) {</span>
+<span class="fc" id="L404">                this.setX(getSpeed() * getDx());</span>
+            }
+
+<span class="fc bfc" id="L407" title="All 4 branches covered.">        } else if (getDx() == 0 &amp;&amp; getDy() == -1) {//up</span>
+<span class="pc bpc" id="L408" title="1 of 2 branches missed.">            if (getUpMoveable()) {</span>
+<span class="fc" id="L409">                this.setY(getSpeed() * getDy());</span>
+            }
+           
+<span class="pc bpc" id="L412" title="1 of 4 branches missed.">        } else if (getDx() == 0 &amp;&amp; getDy() == 1) {//down</span>
+<span class="fc bfc" id="L413" title="All 2 branches covered.">            if (getDownMoveable()) {</span>
+<span class="fc" id="L414">                this.setY(getSpeed() * getDy());</span>
+            }        
+        }
+<span class="fc" id="L417">    }</span>
+
+    /**
+     * Calculate the distence between waka and ghost
+     * @param ghostX ghost coordinate x
+     * @param ghostY ghost coordinate y
+     * @param targetX waka coordinate x
+     * @param targetY waka coordinate y
+     * @return Return the distence in double.
+     */
+    public double culDistence(int ghostX, int ghostY, int targetX, int targetY ) {
+<span class="fc" id="L428">        this.distence = Math.sqrt(Math.pow((double)ghostX - (double)targetX, 2.0) + Math.pow((double)ghostY - (double)targetY, 2.0));</span>
+<span class="fc" id="L429">        return distence;</span>
+    }
+
+
+
+    /**
+     * The ghost make a trun, choose the grid which have the lowest distence value to target.
+     * &lt;br&gt;But all 4 direction  + 16 grid distence to waka in a list, if the direction moveable.&lt;br&gt;
+     * The priority is up, down, left, right.&lt;br&gt;
+     * If the value in the list is equals to 999 means the value never change.&lt;br&gt;
+     * @param x The target coordinate x
+     * @param y The target coordinate y
+     */
+    public void MakeATurn(int x, int y) {
+           
+<span class="fc" id="L444">        double [] temp = {999.00,999.00,999.00,999.00};</span>
+<span class="fc" id="L445">        int tempX = 0;</span>
+<span class="fc" id="L446">        int tempY = 0;</span>
+                                            
+<span class="fc bfc" id="L448" title="All 2 branches covered.">        if (getLeftMoveable()) {    //left</span>
+<span class="fc" id="L449">            tempX = this.getX() - 16;</span>
+<span class="fc" id="L450">            tempY = this.getY();</span>
+<span class="fc" id="L451">            temp[1] = culDistence(tempX, tempY, x, y);</span>
+        } 
+
+<span class="fc bfc" id="L454" title="All 2 branches covered.">        if (getRightMoveable()){ // right</span>
+<span class="fc" id="L455">            tempX = this.getX() + 16;</span>
+<span class="fc" id="L456">            tempY = this.getY();</span>
+<span class="fc" id="L457">            temp[3] = culDistence(tempX, tempY, x, y);</span>
+        }
+
+<span class="fc bfc" id="L460" title="All 2 branches covered.">        if (getUpMoveable()) { //up</span>
+<span class="fc" id="L461">            tempX = this.getX() ;</span>
+<span class="fc" id="L462">            tempY = this.getY() - 16;</span>
+<span class="fc" id="L463">            temp[0] = culDistence(tempX, tempY, x, y);</span>
+        }
+
+<span class="fc bfc" id="L466" title="All 2 branches covered.">        if (getDownMoveable()) {//down</span>
+<span class="fc" id="L467">            tempX = this.getX() ;</span>
+<span class="fc" id="L468">            tempY = this.getY() + 16;</span>
+<span class="fc" id="L469">            temp[2] = culDistence(tempX, tempY, x, y);</span>
+        }
+
+<span class="fc" id="L472">        double min = 15000.0f;</span>
+<span class="fc" id="L473">        int index = 0;</span>
+<span class="fc bfc" id="L474" title="All 2 branches covered.">        for (int i = 0; i &lt; temp.length; i++) {</span>
+<span class="fc bfc" id="L475" title="All 4 branches covered.">            if (temp[i] &lt; min &amp;&amp; temp[i] != 999) {</span>
+<span class="fc" id="L476">                min = temp[i];</span>
+<span class="fc" id="L477">                index = i;</span>
+            }
+        }
+        
+<span class="fc bfc" id="L481" title="All 2 branches covered.">        for (int i = 0; i&lt; temp.length; i++) {</span>
+<span class="fc bfc" id="L482" title="All 2 branches covered.">            for (int j = i + 1; j &lt; temp.length; j++) {</span>
+<span class="fc bfc" id="L483" title="All 4 branches covered.">                if (temp[i] == temp[j] &amp;&amp; temp[i] != 999) {</span>
+                }
+            }
+        }
+
+<span class="fc bfc" id="L488" title="All 2 branches covered.">        if (index == 1) {</span>
+<span class="fc" id="L489">            this.setDirect(-1, 0);</span>
+<span class="fc bfc" id="L490" title="All 2 branches covered.">        } else if (index == 3) {</span>
+<span class="fc" id="L491">            this.setDirect(1, 0);</span>
+<span class="fc bfc" id="L492" title="All 2 branches covered.">        } else if (index == 0) {</span>
+<span class="fc" id="L493">            this.setDirect(0, -1);</span>
+<span class="pc bpc" id="L494" title="1 of 2 branches missed.">        } else if (index == 2) {</span>
+<span class="fc" id="L495">            this.setDirect(0, 1);</span>
+        }         
+<span class="fc" id="L497">    }</span>
+
+    /**
+     * Set the mode index number, specific use for test
+     * @param modeNumber The index of different mode.
+     */
+    public void setModeNumber(int modeNumber) {
+<span class="fc" id="L504">        ModeNumber = modeNumber;</span>
+<span class="fc" id="L505">    }</span>
+    
+    /**
+     * Return the current index of the mode.
+     * @return  Return the current index of the mode.
+     */
+    public int getModeNumber() {
+<span class="fc" id="L512">        return ModeNumber;</span>
+    }
+
+    /**
+     * Return the mode time list read from json file.
+     * @return Return the mode time list read from json file.
+     */
+    public ArrayList&lt;Long&gt; getModeTime() {
+<span class="fc" id="L520">        return ModeTime;</span>
+    }
+
+    /**
+     * Set the time which count the mode time with the param
+     * @param i The time want to set.
+     */
+    public void setTime(int i) {
+<span class="fc" id="L528">        this.timer = i;</span>
+<span class="fc" id="L529">    }</span>
+    
+    /**
+     * Return whether the game is in Soda mode.
+     * @return  True means in soda mode.
+     */
+    public boolean getSodaMode() {
+<span class="fc" id="L536">        return this.SodaMode;</span>
+    }
+    
+    /**
+     * Create for test, whether ghost move in random way.
+     * @return true if the ghost move randomly.
+     */
+    public boolean getRandomMode() {
+<span class="fc" id="L544">        return this.RandomMode;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

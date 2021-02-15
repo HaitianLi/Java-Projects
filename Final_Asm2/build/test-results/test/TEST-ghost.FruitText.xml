@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ghost.FruitText" tests="8" skipped="0" failures="0" errors="0" timestamp="2021-02-15T01:31:51" hostname="hali7329deMac-mini.local" time="8.652">
+  <properties/>
+  <testcase name="SuperFruitControlMode()" classname="ghost.FruitText" time="1.082"/>
+  <testcase name="DeadSuperFruitTouch()" classname="ghost.FruitText" time="1.075"/>
+  <testcase name="SuperFruitNotTouch()" classname="ghost.FruitText" time="1.058"/>
+  <testcase name="FruitLogic()" classname="ghost.FruitText" time="1.09"/>
+  <testcase name="SuperFruitTouch()" classname="ghost.FruitText" time="1.075"/>
+  <testcase name="SuperSodaNotTouch()" classname="ghost.FruitText" time="1.07"/>
+  <testcase name="SuperSodaTouched()" classname="ghost.FruitText" time="1.072"/>
+  <testcase name="SuperDeadSodaTouched()" classname="ghost.FruitText" time="1.074"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

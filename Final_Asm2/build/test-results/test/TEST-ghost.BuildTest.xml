@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ghost.BuildTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2021-02-15T01:32:31" hostname="hali7329deMac-mini.local" time="15.352">
+  <properties/>
+  <testcase name="BuildCheckkKeyValueLeft()" classname="ghost.BuildTest" time="1.102"/>
+  <testcase name="BuildCheckNoNullDataListPassed()" classname="ghost.BuildTest" time="1.15"/>
+  <testcase name="BuildCheckNullGhost()" classname="ghost.BuildTest" time="1.203"/>
+  <testcase name="BuildCreatedFruits()" classname="ghost.BuildTest" time="1.119"/>
+  <testcase name="BuildReadJsonCheck()" classname="ghost.BuildTest" time="1.073"/>
+  <testcase name="BuildCheckkKeyValuePassDown()" classname="ghost.BuildTest" time="1.366"/>
+  <testcase name="BuildReadMapCheck()" classname="ghost.BuildTest" time="1.15"/>
+  <testcase name="BuildOriginalWakaCoordinate()" classname="ghost.BuildTest" time="1.138"/>
+  <testcase name="BuildCheckkKeyValuePassUp()" classname="ghost.BuildTest" time="1.169"/>
+  <testcase name="BuildCheckkKeyValuePassRight()" classname="ghost.BuildTest" time="1.17"/>
+  <testcase name="BuildCheckNullGhostList()" classname="ghost.BuildTest" time="1.213"/>
+  <testcase name="BuildCreateWaka()" classname="ghost.BuildTest" time="1.209"/>
+  <testcase name="BuildreSetGame()" classname="ghost.BuildTest" time="1.224"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

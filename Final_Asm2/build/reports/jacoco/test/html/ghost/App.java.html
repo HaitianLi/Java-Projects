@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>App.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Final_Asm2</a> &gt; <a href="index.source.html" class="el_package">ghost</a> &gt; <span class="el_source">App.java</span></div><h1>App.java</h1><pre class="source lang-java linenums">package ghost;
+
+import processing.core.PApplet;
+
+public class App extends PApplet {
+    public static final int WIDTH = 448;
+    public static final int HEIGHT = 576;
+    private Builder build;
+<span class="fc" id="L9">    public App() {</span>
+<span class="fc" id="L10">        build = new Builder(WIDTH, HEIGHT);</span>
+<span class="fc" id="L11">    }</span>
+    
+    /**
+     * Set the game fram, load images.
+     */
+    public void setup() {
+        // Load images
+<span class="fc" id="L18">        frameRate(60);</span>
+<span class="fc" id="L19">        build.LoadMaterials(this);</span>
+<span class="fc" id="L20">    }</span>
+
+    /**
+     * Returns the build object when app been initialized.
+     * @return The build object
+     */
+    public Builder getBuilder() {
+<span class="fc" id="L27">        return this.build;</span>
+    }
+    
+    /**
+     * Set the size of the game window.
+     */
+    public void settings() {
+<span class="fc" id="L34">        size(WIDTH, HEIGHT);</span>
+<span class="fc" id="L35">    }</span>
+
+    /**
+     * Game listening the key press by user.
+     */
+    public void keyPressed() {
+<span class="nc" id="L41">        build.getKeyValue(keyCode, key); </span>
+<span class="nc" id="L42">    }</span>
+
+    /**
+     * Draw all game objects into the game window with background color(black).
+     * &lt;br&gt;Depend on the framRate, if framRate(60).&lt;br&gt;
+     * The app call this method every second 60 times.
+     */
+    public void draw() { 
+<span class="fc" id="L50">        background(0, 0, 0);</span>
+<span class="fc" id="L51">        build.runGameInterface(this);   </span>
+<span class="fc" id="L52">    }</span>
+    
+    public static void main(String[] args) {
+<span class="nc" id="L55">        PApplet.main(&quot;ghost.App&quot;);</span>
+<span class="nc" id="L56">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
